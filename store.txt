@@ -1,0 +1,59 @@
+-- DDL - Create
+create database store;
+
+use store;
+create table countries(
+code int primary key,
+name varchar(20) unique,
+continent_name varchar(20) not null
+);
+
+create table users(
+id int primary key,
+full_name varchar(20),
+email varchar(20) unique,
+gender varchar(1) check(gender='M' or gender='F'),
+date_of_birth varchar(15),
+created_at datetime default current_timestamp,
+country_code int,
+foreign key (country_code) references countries(code)
+);
+
+create table orders(
+id int primary key,
+user_id int,
+status varchar(6) check(status='Start' or status='Finish'),
+created_at datetime default current_timestamp,
+foreign key (user_id) references users(id)
+);
+
+create table products(
+id int primary key,
+name varchar(10) not null,
+price int default 0,
+status varchar(10) check(status='Valid' or status='Expired'),
+created_at datetime default current_timestamp
+);
+
+create table order_products(
+order_id int,
+product_id int,
+quantity int default 0,
+foreign key (order_id) references orders(id),
+foreign key (product_id) references products(id)
+);
+
+-- DML - Insert
+insert into countries values (1,'Saudi Arabia','Asia');
+insert into users values (1,'Hala','HalaZimami@gmail.com','F','04/06/1998',default,1);
+insert into orders values (1,1,'Start',default);
+insert into products values (1,'Shirt',200,'Valid',default);
+insert into order_products values(1,1,1);
+
+-- DML - Update
+update countries
+set name='Bahrain'
+where code=1;
+
+-- DML - Delete
+delete from products where id=1;
